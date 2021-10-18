@@ -1,6 +1,7 @@
 import os
 import qrcode
 from skimage import io
+from bs4 import BeautifulSoup
 import requests
 import datetime
 from docx import Document
@@ -14,18 +15,35 @@ TXT_PATH = os.path.join(CURRENT_DIR, TXT_NAME)
 QRCODE_IMAGE_PATH = os.path.join(CURRENT_DIR, QRCODES_FILENAME)
 JOBBJUT_URL = 'https://jobbjut.jysd.com/admin/Campus/Create?source=0&target=navTab&_='
 
+# 从url获取标题
+
+
+def getTitle(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    title = soup.h1.string.strip()
+    res = ''.join(filter(str.isalnum, title))  # 去除特殊字符
+    return res
 
 # 从txt读取链接信息
+
+
 def readTxt(doc):
     f = open(TXT_PATH, 'r', encoding='utf-8')
     line = f.readline()
     line = line[:-1]
     while line:
         # read and transfer to qrcode image
-        str = line.split(' ')
-        name = str[0]
-        url = str[1]
-        url2qrcode(url, name, doc)
+        arr = line.split(' ')
+        if len(arr) == 1:
+            url = line
+            title = getTitle(url)
+        else:
+            url = arr[0]
+            title = arr[1]
+
+        url2qrcode(url, title, doc)
         # ---
         line = f.readline()
         line = line[:-1]
