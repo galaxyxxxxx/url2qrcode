@@ -1,6 +1,5 @@
 import os
 import qrcode
-from skimage import io
 from bs4 import BeautifulSoup
 import requests
 import datetime
@@ -16,8 +15,6 @@ QRCODE_IMAGE_PATH = os.path.join(CURRENT_DIR, QRCODES_FILENAME)
 JOBBJUT_URL = 'https://jobbjut.jysd.com/admin/Campus/Create?source=0&target=navTab&_='
 
 # 从url获取标题
-
-
 def getTitle(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -27,8 +24,6 @@ def getTitle(url):
     return res
 
 # 从txt读取链接信息
-
-
 def readTxt(doc):
     f = open(TXT_PATH, 'r', encoding='utf-8')
     line = f.readline()
